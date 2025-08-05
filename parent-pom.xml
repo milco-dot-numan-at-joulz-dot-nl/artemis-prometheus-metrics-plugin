@@ -18,8 +18,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
+   <groupId>com.redhat.amq-broker</groupId>
+   <artifactId>artemis-prometheus-metrics-pom</artifactId>
+   <packaging>pom</packaging>
+   <version>3.2.0</version>
+
    <properties>
       <artemis-server.version>2.32.0</artemis-server.version>
       <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
@@ -29,13 +35,11 @@ under the License.
       <jakarta.servlet-api.version>5.0.0</jakarta.servlet-api.version>
    </properties>
 
-   <groupId>com.redhat.amq-broker</groupId>
-   <artifactId>artemis-prometheus-metrics-plugin-servlet</artifactId>
-   <version>3.2.0</version>
+   <modules>
+      <module>artemis-prometheus-metrics-plugin-servlet</module>
+      <module>artemis-prometheus-metrics-plugin</module>
+   </modules>
 
-   <packaging>war</packaging>
-   <name>ActiveMQ Artemis Prometheus Metrics Plugin Servlet</name>
-   
    <dependencyManagement>
       <dependencies>
          <dependency>
@@ -44,30 +48,25 @@ under the License.
             <version>${artemis-server.version}</version>
             <scope>provided</scope> <!-- this is provided by the broker -->
          </dependency>
-         </dependencies>
-   </dependencyManagement>
-
-   <dependencies>
-      <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
-            <scope>provided</scope>
-      </dependency>
+         <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+            <version>${micrometer-registry-prometheus.version}</version>
+         </dependency>
          <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-core</artifactId>
             <version>${micrometer-core.version}</version>
             <scope>provided</scope> <!-- this is provided by the broker -->
          </dependency>
-      <dependency>
-            <groupId>io.micrometer</groupId>
-            <artifactId>micrometer-registry-prometheus</artifactId>
-            <version>${micrometer-registry-prometheus.version}</version>
-            <scope>provided</scope> <!-- this will be provided by the artemis-prometheus-metrics-plugin uber jar -->
+         <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>${jakarta.servlet-api.version}</version>
+            <scope>provided</scope> <!-- this is provided by the broker -->
          </dependency>
-   </dependencies>
-
+      </dependencies>
+   </dependencyManagement>
    <build>
       <pluginManagement>
          <plugins>
@@ -83,23 +82,5 @@ under the License.
             </plugin>
          </plugins>
       </pluginManagement>
-
-      <plugins>
-         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-war-plugin</artifactId>
-            <version>3.3.1</version>
-         </plugin>
-
-         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-               <source>11</source>
-               <target>11</target>
-            </configuration>
-         </plugin>
-      </plugins>
-      <finalName>metrics</finalName>
    </build>
 </project>
