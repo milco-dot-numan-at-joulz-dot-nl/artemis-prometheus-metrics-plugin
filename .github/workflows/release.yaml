@@ -1,0 +1,23 @@
+name: Pull Request
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  builds:
+    permissions:
+      packages: write
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Builds
+        uses: paulushcgcj/action-java-publish@vX.Y.Z
+        with:
+          dir: .
+          app-version: 0.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
